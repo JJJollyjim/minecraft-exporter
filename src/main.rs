@@ -59,6 +59,7 @@ struct Players<'a> {
     max: u64,
     online: u64,
     #[serde(borrow)]
+    #[serde(default)]
     sample: Vec<Player<'a>>,
 }
 
@@ -81,6 +82,8 @@ enum ScanError {
 
 #[tokio::main]
 async fn main() {
+    tracing_subscriber::fmt::init();
+
     main2().await
 }
 
@@ -207,10 +210,5 @@ async fn do_scan<'a>(addr: SocketAddr) -> Result<Vec<u8>, ScanError> {
         .await
         .map_err(|_| JsonReadError)?;
 
-    // if let Some(ver) = response.modinfo.mod_list.iter().find(|m| m.modid == "opencomputers").map(|m| m.version) {
-    //     println!("Have compute r :3 version {}", ver);
-    // } else {
-    //     println!("No compute r :c");
-    // }
     Ok(jsonbuf)
 }
